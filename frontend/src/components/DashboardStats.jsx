@@ -7,38 +7,12 @@ import {
   CheckCircle2,
   FileQuestion,
   Info,
+  ShieldCheck,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function DashboardStats({ scans, loading, onOpenAuth }) {
   const { currentUser, isFirebaseConfigured } = useAuth();
-
-  if (!isFirebaseConfigured) {
-    return (
-      <div className="empty-state">
-        <Info size={40} className="empty-state-icon" style={{ opacity: 0.8, color: '#60a5fa' }} />
-        <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Cloud Dashboard</h3>
-        <p style={{ maxWidth: '480px', margin: '0 auto 1.25rem auto', color: '#94a3b8' }}>
-          Connect your Firebase configuration in <code>frontend/.env</code> to unlock persistent user scan statistics and cloud analytics.
-        </p>
-      </div>
-    );
-  }
-
-  if (!currentUser) {
-    return (
-      <div className="empty-state">
-        <BarChart3 size={40} className="empty-state-icon" style={{ opacity: 0.8, color: '#60a5fa' }} />
-        <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Personal Detection Dashboard</h3>
-        <p style={{ maxWidth: '480px', margin: '0 auto 1.25rem auto', color: '#94a3b8' }}>
-          Sign in to track your cumulative scan statistics, detect trends, and maintain a safety ledger.
-        </p>
-        <button className="btn-primary" onClick={onOpenAuth}>
-          Sign In / Register
-        </button>
-      </div>
-    );
-  }
 
   if (loading) {
     return (
@@ -49,14 +23,15 @@ export default function DashboardStats({ scans, loading, onOpenAuth }) {
     );
   }
 
-  const totalScans = scans.length;
+  const totalScans = scans ? scans.length : 0;
+
   if (totalScans === 0) {
     return (
       <div className="empty-state">
         <FileQuestion size={40} className="empty-state-icon" />
         <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>No scans yet.</h3>
-        <p style={{ color: '#94a3b8' }}>
-          Upload an image or video in the Scan tab to start building your analysis metrics.
+        <p style={{ color: '#94a3b8', maxWidth: '480px', margin: '0 auto 1.25rem auto' }}>
+          Upload an image or video in the <strong>Scan Media</strong> tab to analyze files and see your metrics appear here!
         </p>
       </div>
     );
@@ -69,13 +44,35 @@ export default function DashboardStats({ scans, loading, onOpenAuth }) {
 
   return (
     <div>
-      <div style={{ marginBottom: '1.75rem' }}>
-        <h2 style={{ fontSize: '1.75rem', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '0.25rem' }}>
-          Security Overview
-        </h2>
-        <p style={{ color: '#94a3b8', fontSize: '0.95rem' }}>
-          Real-time metrics calculated from your authenticated scan records.
-        </p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.75rem' }}>
+        <div>
+          <h2 style={{ fontSize: '1.75rem', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '0.25rem' }}>
+            Security Overview
+          </h2>
+          <p style={{ color: '#94a3b8', fontSize: '0.95rem' }}>
+            Real-time metrics calculated from your analyzed media records.
+          </p>
+        </div>
+
+        <div>
+          <span
+            style={{
+              padding: '0.35rem 0.75rem',
+              borderRadius: '9999px',
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              background: isFirebaseConfigured && currentUser ? 'rgba(16, 185, 129, 0.15)' : 'rgba(59, 130, 246, 0.15)',
+              color: isFirebaseConfigured && currentUser ? '#34d399' : '#93c5fd',
+              border: isFirebaseConfigured && currentUser ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(59, 130, 246, 0.3)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+            }}
+          >
+            <ShieldCheck size={14} />
+            <span>{isFirebaseConfigured && currentUser ? 'Cloud Synced' : 'Local Storage Active'}</span>
+          </span>
+        </div>
       </div>
 
       <div className="stats-grid">

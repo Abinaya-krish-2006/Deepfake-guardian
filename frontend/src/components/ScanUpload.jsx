@@ -118,20 +118,18 @@ export default function ScanUpload({ onScanSaved }) {
       const data = await analyzeMedia(file);
       setResult(data);
 
-      // Save scan record for authenticated user
-      if (currentUser?.uid) {
-        await saveScanRecord(currentUser.uid, {
-          fileName: file.name,
-          mediaType: isVideo ? 'video' : 'image',
-          status: data.status,
-          confidence: data.confidence,
-          explanation: data.explanation,
-          detectionMode: data.detection_mode,
-          isDemo: data.is_demo,
-        });
-        if (onScanSaved) {
-          onScanSaved();
-        }
+      // Save scan record (to Cloud Firestore if logged in, or LocalStorage if not)
+      await saveScanRecord(currentUser?.uid || 'local_user', {
+        fileName: file.name,
+        mediaType: isVideo ? 'video' : 'image',
+        status: data.status,
+        confidence: data.confidence,
+        explanation: data.explanation,
+        detectionMode: data.detection_mode,
+        isDemo: data.is_demo,
+      });
+      if (onScanSaved) {
+        onScanSaved();
       }
     } catch (err) {
       setError(err.message || 'An unexpected error occurred.');

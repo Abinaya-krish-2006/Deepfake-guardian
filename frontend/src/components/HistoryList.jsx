@@ -18,33 +18,6 @@ export default function HistoryList({ scans, loading, onScanDeleted, onOpenAuth 
   const { currentUser, isFirebaseConfigured } = useAuth();
   const [deletingId, setDeletingId] = useState(null);
 
-  if (!isFirebaseConfigured) {
-    return (
-      <div className="empty-state">
-        <Info size={40} className="empty-state-icon" style={{ opacity: 0.8, color: '#60a5fa' }} />
-        <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Cloud Scan History</h3>
-        <p style={{ maxWidth: '480px', margin: '0 auto 1.25rem auto', color: '#94a3b8' }}>
-          Connect your Firebase credentials in <code>frontend/.env</code> to store and view your scan history securely.
-        </p>
-      </div>
-    );
-  }
-
-  if (!currentUser) {
-    return (
-      <div className="empty-state">
-        <History size={40} className="empty-state-icon" style={{ opacity: 0.8, color: '#60a5fa' }} />
-        <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Sign In to View Your History</h3>
-        <p style={{ maxWidth: '480px', margin: '0 auto 1.25rem auto', color: '#94a3b8' }}>
-          Your scan history is protected with user-level Firestore security rules. Sign in to view and manage past reports.
-        </p>
-        <button className="btn-primary" onClick={onOpenAuth}>
-          Sign In / Register
-        </button>
-      </div>
-    );
-  }
-
   if (loading) {
     return (
       <div style={{ textAlign: 'center', padding: '3rem 0' }}>
@@ -54,13 +27,13 @@ export default function HistoryList({ scans, loading, onScanDeleted, onOpenAuth 
     );
   }
 
-  if (scans.length === 0) {
+  if (!scans || scans.length === 0) {
     return (
       <div className="empty-state">
         <History size={40} className="empty-state-icon" />
         <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>No Scans Yet</h3>
-        <p style={{ color: '#94a3b8' }}>
-          Any photos or videos you analyze while logged in will appear here automatically.
+        <p style={{ color: '#94a3b8', maxWidth: '480px', margin: '0 auto' }}>
+          Any photos or videos you analyze in the <strong>Scan Media</strong> tab will automatically appear in this history ledger.
         </p>
       </div>
     );
