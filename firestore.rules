@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Scans are nested under the specific user's document
+    match /users/{userId}/scans/{scanId} {
+      // Allow read and write only if the user is authenticated and is accessing their own data
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // User profile information
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Default deny for all other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

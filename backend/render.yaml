@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: deepfake-guardian-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DETECTION_MODE
+        value: ai
+      - key: MAX_FILE_SIZE_MB
+        value: 50
+      - key: MAX_VIDEO_DURATION_SECONDS
+        value: 60
+      - key: AIORNOT_API_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
