@@ -5,6 +5,9 @@ import { useAuth } from '../context/AuthContext';
 export default function Navbar({ activeTab, setActiveTab, onOpenAuth }) {
   const { currentUser, logout, isFirebaseConfigured } = useAuth();
 
+  const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '');
+  const docsUrl = apiBaseUrl ? `${apiBaseUrl}/docs` : '/docs';
+
   return (
     <header className="navbar">
       <div className="nav-inner">
@@ -44,7 +47,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenAuth }) {
           </button>
 
           <a
-            href="http://localhost:8000/docs"
+            href={docsUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="nav-btn"
